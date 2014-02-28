@@ -2,7 +2,16 @@ class samba::server($interfaces = '',
                     $security = '',
                     $server_string = '',
                     $unix_password_sync = '',
+                    $encrypt_password = 'yes',
+                    $passwd_program = '',
+                    $passdb_backend = 'tdbsam',
+                    $passwd_chat = '*new*password* %n\n*new*password* %n\n *changed*',
                     $workgroup = '',
+                    $log_level = '0',
+                    $syslog = '1',
+                    $logon_path = '\\%N\profile\%U',
+                    $logon_home = 'U:',
+                    $logon_script = 'U:',
                     $bind_interfaces_only = 'yes',) {
 
   include samba::server::install
@@ -22,14 +31,23 @@ class samba::server($interfaces = '',
     notify  => Class['samba::server::service']
   }
 
-
   set_samba_option {
+    'log level':            value => $log_level;
+    'syslog':               value => $syslog;
     'interfaces':           value => $interfaces;
     'bind interfaces only': value => $bind_interfaces_only;
     'security':             value => $security;
     'server string':        value => $server_string;
     'unix password sync':   value => $unix_password_sync;
+    'encrypt password':     value => $encrypt_password;
+    'passwd program':       value => $passwd_program;
+    'passdb backend':       value => $passdb_backend;
+    'passwd chat':          value => $passwd_chat;
     'workgroup':            value => $workgroup;
+    'logon path':           value => $logon_path;
+    'logon home':           value => $logon_home;
+    'logon script':         value => $logon_script;
+    'dns proxy':            value => no;
   }
 
   file {'check_samba_user':

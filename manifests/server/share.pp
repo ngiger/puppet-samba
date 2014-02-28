@@ -1,18 +1,16 @@
 define samba::server::share($ensure = present,
                             $browsable = '',
                             $comment = '',
-                            $copy = '',
                             $create_mask = '',
                             $directory_mask = '',
-                            $force_create_mask = '',
-                            $force_directory_mask = '',
+                            $force_create_mode = '',
+                            $force_directory_mode = '',
                             $force_group = '',
                             $force_user = '',
-                            $guest_account = '',
                             $guest_ok = '',
                             $guest_only = '',
                             $path = '',
-                            $op_locks = '',
+                            $oplocks = '',
                             $level2_oplocks = '',
                             $veto_oplock_files = '',
                             $read_only = '',
@@ -21,6 +19,7 @@ define samba::server::share($ensure = present,
                             $writable = '',
                             $printable = '',
                             $valid_users = '',
+                            $profile_acl = '',
                             ) {
                               
   $incl    = $samba::server::incl
@@ -50,10 +49,6 @@ define samba::server::share($ensure = present,
           default => "set \"${target}/comment\" '${comment}'",
           ''      => "rm  \"${target}/comment\"",
       },
-      $copy ? {
-          default => "set \"${target}/copy\" '${copy}'",
-          ''      => "rm  \"${target}/copy\"",
-      },
       $create_mask ? {
         default => "set \"${target}/create mask\" '${create_mask}'",
         ''      => "rm  \"${target}/create mask\"",
@@ -62,13 +57,13 @@ define samba::server::share($ensure = present,
         default => "set \"${target}/directory mask\" '${directory_mask}'",
         ''      => "rm  \"${target}/directory mask\"",
       },
-      $force_create_mask ? {
-        default => "set \"${target}/force create mask\" '${force_create_mask}'",
-        ''      => "rm  \"${target}/force create mask\"",
+      $force_create_mode ? {
+        default => "set \"${target}/force create mode\" '${force_create_mode}'",
+        ''      => "rm  \"${target}/force create mode\"",
       },
-      $force_directory_mask ? {
-        default => "set \"${target}/force directory mask\" '${force_directory_mask}'",
-        ''      => "rm  \"${target}/force directory mask\"",
+      $force_directory_mode ? {
+        default => "set \"${target}/force directory mode\" '${$force_directory_mode}'",
+        ''      => "rm  \"${target}/force directory mode\"",
       },
       $force_group ? {
         default => "set \"${target}/force group\" '${force_group}'",
@@ -77,10 +72,6 @@ define samba::server::share($ensure = present,
       $force_user ? {
         default => "set \"${target}/force user\" '${force_user}'",
         ''      => "rm  \"${target}/force user\"",
-      },
-      $guest_account ? {
-        default => "set \"${target}/guest account\" '${guest_account}'",
-        ''      => "rm  \"${target}/guest account\"",
       },
       $guest_ok ? {
         true    => "set \"${target}/guest ok\" yes",
@@ -127,6 +118,16 @@ define samba::server::share($ensure = present,
       notify  => Class['samba::server::service']
     }
 
+    augeas { "${name}-profile_acls":
+      context => $context,
+      changes => $profile_acls ? {
+        default => "set \"${target}/profile acls\" '${profile_acls}'",
+        ''      => "rm \"${target}/profile acls\"",
+      },
+      require => Augeas["${name}-section"],
+      notify  => Class['samba::server::service']
+    }
+    
     augeas { "${name}-valid_users":
       context => $context,
       changes => $valid_users ? {
@@ -137,10 +138,10 @@ define samba::server::share($ensure = present,
       notify  => Class['samba::server::service']
     }
 
-    augeas { "${name}-op_locks":
+    augeas { "${name}-oplocks":
       context => $context,
-      changes => $op_locks ? {
-        default => "set \"${target}/oplocks\" '${op_locks}'",
+      changes => $oplocks ? {
+        default => "set \"${target}/oplocks\" '${oplocks}'",
         ''      => "rm \"${target}/oplocks\"",
       },
       require => Augeas["${name}-section"],
