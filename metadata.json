@@ -1,0 +1,14 @@
+{
+  "name": "ajjahn-samba",
+  "version": "0.1.2",
+  "author": "Adam Jahn",
+  "summary": "Module for provisioning Samba",
+  "license": "Apache 2.0",
+  "source": "",
+  "project_page": "https://github.com/ajjahn/puppet-samba",
+  "issues_url": null,
+  "description": "Module for provisioning Samba",
+  "dependencies": [
+  
+  ]
+}
