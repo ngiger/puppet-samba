@@ -1,6 +1,8 @@
-require 'puppet'
-require 'rake'
+require 'puppetlabs_spec_helper/rake_tasks'
+require 'puppetlabs_spec_helper/module_spec_helper'
 require 'puppet-lint/tasks/puppet-lint'
+require 'puppet-syntax/tasks/puppet-syntax'
+
 
 # Leave this in until we're ready to write documentation
 PuppetLint.configuration.send("disable_documentation")

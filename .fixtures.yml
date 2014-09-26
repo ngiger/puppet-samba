@@ -1,0 +1,6 @@
+# run once rake spec_prep
+# run often (avoiding download) rake spec_standalone
+# or bundle exec rspec spec/class/some_spec.rb
+fixtures:
+  symlinks:
+    samba: "#{source_dir}"
